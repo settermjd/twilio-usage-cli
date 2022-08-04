@@ -1,0 +1,31 @@
+= Twilio Usage Lister
+
+This is a small project, written in PHP, that lists a Twilio account's usage details.
+Specifically, it supports the ability to list account usage for SMS, MMS, and voice calls within a given date range, filtered by the pre-defined usage categories (daily, monthly, today, yesterday, etc).
+
+== Installation
+
+To install the project, you need to clone the project, install the dependencies, and then it's ready to use.
+You can do all of this by running the commands below.
+
+[source,bash]
+----
+git clone ...
+cd ...
+composer install
+
+----
+
+When completed, a binary named _twilio-usage-reporter_ will be available in the vendor directory.
+
+== Usage
+
+[source,bash]
+----
+twilio-usage-reporter \
+    --start-date 2022-04-21 \
+    --end-date 2022-04-28 \
+    --category "calls"
+----
+
+Refer to the Usage Record API documentation for https://www.twilio.com/docs/usage/api/usage-record#usage-categories[a complete list of available usage categories].

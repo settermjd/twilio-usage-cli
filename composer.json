@@ -1,0 +1,44 @@
+{
+    "name": "settermjd/twilio-usage-cli",
+    "description": "A console application for viewing a Twilio account's usage.",
+    "type": "project",
+    "homepage": "https://github.com/settermjd/twilio-usage-cli",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "cli",
+        "terminal",
+        "console",
+        "Twilio",
+        "php"
+    ],
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "ocramius/package-versions": true
+        }
+    },
+    "support": {
+        "issues": "https://github.com/settermjd/twilio-usage-cli/issues",
+        "source": "https://github.com/settermjd/twilio-usage-cli",
+        "rss": "https://github.com/settermjd/twilio-usage-cli/releases.atom"
+    },
+    "require": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/console": "^6.1",
+        "twilio/sdk": "^6.40",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhoneNumberUsage\\": "src/PhoneNumberUsage"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhoneNumberUsageTest\\": "test/PhoneNumberUsage/"
+        }
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0"
+    }
+}
