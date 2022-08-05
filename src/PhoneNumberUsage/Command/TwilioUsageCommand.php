@@ -45,6 +45,12 @@ EOF;
         $this->setHelp($this->helpMessage);
 
         $this->addOption(
+            'limit-records',
+            'l',
+        InputOption::VALUE_OPTIONAL,
+            'The record limit'
+        );
+        $this->addOption(
             'start-date',
             's',
             InputOption::VALUE_OPTIONAL,
