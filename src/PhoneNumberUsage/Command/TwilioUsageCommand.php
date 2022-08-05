@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace PhoneNumberUsage\Command;
 
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Formatter\IntlMoneyFormatter;
+use Money\Money;
 use PhoneNumberUsage\TwilioUsage;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,13 +37,13 @@ EOF;
 
     private TwilioUsage $twilioUsage;
     private array $rows = [];
+    private \NumberFormatter $formatter;
 
     public function __construct(TwilioUsage $twilioUsage)
     {
         parent::__construct();
 
-        $this->rows;
-
+        $this->formatter = new \NumberFormatter('en_US', \NumberFormatter::PATTERN_DECIMAL);
         $this->twilioUsage = $twilioUsage;
     }
 
@@ -72,6 +79,9 @@ EOF;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $outputStyle = new OutputFormatterStyle('#56be4e', null, ['bold']);
+        $output->getFormatter()->setStyle('fire', $outputStyle);
+
         $startDate = $input->getOption('start-date') ?: null;
         $endDate = $input->getOption('end-date') ?: null;
         $category = $input->getOption('category') ?: null;
@@ -81,16 +91,40 @@ EOF;
             $limitRecords, $startDate, $endDate, $category
         );
 
+        $totalCost = 0.00;
+
         foreach ($records as $record) {
             $this->rows[] = [
                 $record->asOf,
                 $record->category,
-                $record->price,
-                $record->priceUnit,
+                $this->formatter->formatCurrency(
+                    (float)$record->price,
+                    strtoupper($record->priceUnit)
+                ),
+                strtoupper($record->priceUnit),
             ];
+
+            $totalCost += $record->price;
         }
 
-        $output->writeln("Twilio usage statistics");
+        $total = new Money((int) round($totalCost * 100), new Currency('USD'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);
+
+        $this->rows[] = new TableSeparator();
+        $this->rows[] = [
+            new TableCell(
+                sprintf('Total records: %d. Total cost: %s.', count($this->rows) -1, $moneyFormatter->format($total)),
+                ['colspan' => 4]
+            )
+        ];
+
+        $output->writeln("");
+        $output->writeln("<fire>Twilio Account Usage Statistics</>\n");
+        if ($filterNotice = $this->getFilterNotification($startDate, $endDate, $category)) {
+            $output->writeln($filterNotice . "\n");
+        }
 
 
         $table = new Table($output);
