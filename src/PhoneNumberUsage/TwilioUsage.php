@@ -9,18 +9,20 @@ use Twilio\Rest\Client;
 
 class TwilioUsage
 {
+    public const MAX_RESULTS = 20;
+
     private Client $client;
 
     private array $allowedCategories = [
-        'calls',
-        'pfax-minutes',
-        'pfax-pages',
-        'phonenumbers',
-        'pv',
-        'recordings',
-        'sms',
-        'totalprice',
-        'transcriptions',
+        'calls' => 'calls',
+        'pfax minutes' => 'pfax-minutes',
+        'pfax pages' => 'pfax-pages',
+        'phone numbers' => 'phonenumbers',
+        'pv' => 'pv',
+        'recordings' => 'recordings',
+        'sms' => 'sms',
+        'total price' => 'totalprice',
+        'transcriptions' => 'transcriptions',
     ];
 
     public function __construct(Client $client)
@@ -52,8 +54,8 @@ class TwilioUsage
             $options['endDate'] = $endDate;
         }
 
-        if ($category !== null && in_array($category, $this->allowedCategories)) {
-            $options['category'] = $category;
+        if ($category !== null && in_array(strtolower($category), array_keys($this->allowedCategories))) {
+            $options['category'] = $this->allowedCategories[strtolower($category)];
         }
 
         return $this->client
