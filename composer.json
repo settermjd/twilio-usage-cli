@@ -23,6 +23,8 @@
         "rss": "https://github.com/settermjd/twilio-usage-cli/releases.atom"
     },
     "require": {
+        "ext-intl": "*",
+        "moneyphp/money": "^4.0",
         "phpunit/phpunit": "^9.5",
         "symfony/console": "^6.1",
         "twilio/sdk": "^6.40",
