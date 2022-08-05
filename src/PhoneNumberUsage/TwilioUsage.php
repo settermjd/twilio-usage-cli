@@ -39,19 +39,20 @@ class TwilioUsage
      * @return RecordInstance[]
      */
     public function __invoke(
-        \DateTimeImmutable $startDate = null,
-        \DateTimeImmutable $endDate = null,
+        int $maxResults = self::MAX_RESULTS,
+        string $startDate = null,
+        string $endDate = null,
         string $category = null
     ): array
     {
         $options = [];
 
-        if ($startDate instanceof \DateTimeImmutable) {
-            $options['startDate'] = $startDate;
+        if ($startDate !== null) {
+            $options['startDate'] = new \DateTimeImmutable($startDate);
         }
 
-        if ($endDate instanceof \DateTimeImmutable) {
-            $options['endDate'] = $endDate;
+        if ($endDate !== null) {
+            $options['endDate'] = new \DateTimeImmutable($endDate);
         }
 
         if ($category !== null && in_array(strtolower($category), array_keys($this->allowedCategories))) {
@@ -61,6 +62,6 @@ class TwilioUsage
         return $this->client
             ->usage
             ->records
-            ->read($options, 20);
+            ->read($options, $maxResults);
     }
 }

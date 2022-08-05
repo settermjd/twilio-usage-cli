@@ -72,10 +72,13 @@ EOF;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $startDate = $input->getOption('start-date') ?: null;
+        $endDate = $input->getOption('end-date') ?: null;
+        $category = $input->getOption('category') ?: null;
+        $limitRecords = (int)$input->getOption('limit-records') ?: 20;
+
         $records = $this->twilioUsage->__invoke(
-            $input->getOption('start-date') ?? null,
-            $input->getOption('end-date') ?? null,
-            $input->getOption('category') ?? null
+            $limitRecords, $startDate, $endDate, $category
         );
 
         foreach ($records as $record) {
