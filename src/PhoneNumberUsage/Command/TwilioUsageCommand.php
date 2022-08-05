@@ -102,8 +102,28 @@ EOF;
         return Command::SUCCESS;
     }
 
-    protected function getFilterNotification(string $startDate, string $endDate, string $category): string
+    protected function getFilterNotification(string $startDate = null, string $endDate = null, string $category = null): string
     {
-        return '';
+        $output = "";
+
+        if ($startDate === null && $endDate === null && $category === null) {
+            return $output;
+        }
+
+        $filterOptions = [];
+
+        if ($startDate !== null) {
+            $filterOptions[] = sprintf("start date: '%s'", $startDate);
+        }
+
+        if ($endDate !== null) {
+            $filterOptions[] = sprintf("end date: '%s'", $endDate);
+        }
+
+        if ($category !== null) {
+            $filterOptions[] = sprintf("category: '%s'", $category);
+        }
+
+        return "Filtering by: " . implode(" / ", $filterOptions);
     }
 }
