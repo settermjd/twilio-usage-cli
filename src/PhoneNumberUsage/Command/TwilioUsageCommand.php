@@ -110,10 +110,9 @@ EOF;
 
         $output->writeln("");
         $output->writeln("<fire>Twilio Account Usage Statistics</>\n");
-        if ($filterNotice = $this->getFilterNotification(
-            $startDate, $endDate, $category
-        )
-        ) {
+
+        $filterNotice = $this->getFilterNotification($startDate, $endDate, $category);
+        if ($filterNotice) {
             $output->writeln($filterNotice . "\n");
         }
 
@@ -129,9 +128,9 @@ EOF;
 
     public function getUsageData(
         int $limitRecords,
-        string $startDate,
-        string $endDate,
-        string $category
+        string $startDate = null,
+        string $endDate = null,
+        string $category = null
     ): string|float {
         $records = $this->twilioUsage->__invoke(
             $limitRecords, $startDate, $endDate, $category
